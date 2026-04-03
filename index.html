@@ -15,25 +15,32 @@
       color: #333;
     }
 
+    /* CABECERA */
     header {
       background: #ffcb05;
-      padding: 1rem 2rem;
+      padding: 1rem 0.5rem;
       display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 1rem;
+      position: relative;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    header img {
-      height: 60px;
+    /* Imágenes decorativas laterales */
+    .side-img {
+      position: absolute;
+      top: 50%;
+      width: 70px;
+      opacity: 0.4;
+      transform: translateY(-50%);
     }
 
-    h1 {
-      margin: 0;
-      font-family: 'Pokemon Solid', sans-serif;
-      font-size: 2.2rem;
-      color: #2a75bb;
-      letter-spacing: 2px;
+    #left-img { left: 8px; }
+    #right-img { right: 8px; }
+
+    #logo-tcg {
+      max-width: 320px;
+      width: 70%;
     }
 
     .container {
@@ -42,17 +49,19 @@
       margin: auto;
     }
 
+    /* CONTROLES */
     .controls {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       margin-bottom: 1.5rem;
       align-items: center;
+      justify-content: center;
     }
 
     select, input[type="text"], button {
-      padding: 0.5rem 0.7rem;
-      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 1rem;
     }
@@ -68,12 +77,14 @@
       background: #1d4f7a;
     }
 
+    /* COLECCIONES */
     .set {
       background: white;
-      padding: 1.2rem;
-      margin-bottom: 1.4rem;
+      padding: 0.6rem 0.8rem;   /* Mucho más pequeño */
+      margin-bottom: 0.6rem;    /* Más compacto */
       border-radius: 10px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+      min-height: auto;         /* ¡Elimina la altura forzada! */
     }
 
     .set-header {
@@ -85,6 +96,15 @@
 
     .set-header strong {
       font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .set-header strong::before {
+      content: "⭐";
+      font-size: 1.1rem;
+      opacity: 0.7;
     }
 
     .cards {
@@ -154,22 +174,6 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 600px) {
-      .card-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .set-header strong {
-        font-size: 1.1rem;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .card-grid {
-        grid-template-columns: repeat(1, 1fr);
-      }
-    }
-
     /* MI COLECCIÓN */
     #myCollection {
       margin-top: 2rem;
@@ -181,20 +185,57 @@
 
     #myCollection h2 {
       margin-top: 0;
+      text-align: center;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .set-header strong {
+        font-size: 1.15rem;
+      }
+      .set {
+        min-height: 22vh;
+      }
+      #logo-tcg {
+        max-width: 260px;
+      }
+      .side-img {
+        width: 60px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .card-grid {
+        grid-template-columns: repeat(1, 1fr);
+      }
+      .side-img {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
   <header>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/International_Pok%C3%A9mon_logo.svg">
-    <h1>Pokémon TCG</h1>
-  </header>
+    <!-- Mew izquierda -->
+    <img id="left-img" class="side-img"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNaU6fUwNeZno0zVOpvKrgNbu-FsT3pfyCyA&s">
 
+    <!-- Logo TCG español -->
+    <img id="logo-tcg"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Pok%C3%A9mon_Trading_Card_Game_logo.svg/1280px-Pok%C3%A9mon_Trading_Card_Game_logo.svg.png">
+
+    <!-- Mewtwo derecha -->
+    <img id="right-img" class="side-img"
+      src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c8de2ede-79ce-413b-93f2-5e70bff18f32/dahpkqo-c43cd092-2a4c-4f5f-a0c0-7e52364fb40d.png/v1/fill/w_1024,h_1068/mewtwo_emblem_by_eternalsonicstar_dahpkqo-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTA2OCIsInBhdGgiOiIvZi9jOGRlMmVkZS03OWNlLTQxM2ItOTNmMi01ZTcwYmZmMThmMzIvZGFocGtxby1jNDNjZDA5Mi0yYTRjLTRmNWYtYTBjMC03ZTUyMzY0ZmI0MGQucG5nIiwid2lkdGgiOiI8PTEwMjQifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.WWj9-18p8COqiK38g64TiqFlIypNmkQRU_7ZHTf8ILo">
+  </header>
   <div class="container">
 
     <div class="controls">
-      <label><strong>Idioma de colección:</strong></label>
+      <label><strong>Idioma:</strong></label>
       <select id="languageSelect">
         <option value="en">Inglés</option>
         <option value="es">Español</option>
@@ -211,6 +252,12 @@
 
     <div id="myCollection">
       <h2>Mi colección</h2>
+      <input
+        type="text"
+        id="searchMyCards"
+        placeholder="Buscar en mi colección..."
+        style="width:100%; padding:0.5rem; margin-bottom:1rem; border-radius:8px; border:1px solid #ccc;"
+      >
       <div id="myCollectionContent">Aún no tienes cartas marcadas.</div>
     </div>
   </div>
@@ -219,13 +266,13 @@
   <div id="modal" class="modal">
     <img id="modalImg" src="">
   </div>
-
   <script>
     const API_BASE = "https://api.pokemontcg.io/v2";
     const STORAGE_KEY = "pokemon_tcg_collection";
 
     const languageSelect = document.getElementById("languageSelect");
     const searchSets = document.getElementById("searchSets");
+    const searchMyCards = document.getElementById("searchMyCards");
     const reloadBtn = document.getElementById("reloadBtn");
     const setsContainer = document.getElementById("setsContainer");
     const myCollectionContent = document.getElementById("myCollectionContent");
@@ -284,10 +331,10 @@
         const header = document.createElement("div");
         header.className = "set-header";
 
-        const total = set.total;
-        const owned = countOwnedInSet(set.id);
+        const total = set.total || 0;
+        const owned = 0; // contador visual (no exacto)
 
-        header.innerHTML = `<strong>${set.name}</strong> <span>${owned}/${total}</span>`;
+        header.innerHTML = `<strong>${set.name}</strong> <span>${owned} / ${total}</span>`;
 
         const cardsDiv = document.createElement("div");
         cardsDiv.className = "cards";
@@ -303,7 +350,7 @@
 
           if (!cardsDiv.dataset.loaded) {
             const detail = await fetchJSON(`${API_BASE}/cards?q=set.id:${set.id}`);
-            renderCards(cardsDiv, detail.data);
+            renderCards(cardsDiv, detail.data, set.id);
             cardsDiv.dataset.loaded = "true";
           }
         });
@@ -314,7 +361,7 @@
       });
     }
 
-    function renderCards(container, cards) {
+    function renderCards(container, cards, setId) {
       container.innerHTML = "";
 
       const lang = languageSelect.value;
@@ -361,6 +408,7 @@
               setOwned(card.id, lang, chk.checked);
               status.textContent = chk.checked ? "La tengo" : "No la tengo";
               status.classList.toggle("owned", chk.checked);
+              updateMyCollection();
             });
 
             row.append(img, chk, name, status);
@@ -376,21 +424,48 @@
       updateList();
     }
 
-    function countOwnedInSet(setId) {
+    async function updateMyCollection() {
       const lang = languageSelect.value;
-      return Object.keys(collection).filter(key => key.startsWith(lang + ":") && key.includes(setId)).length;
-    }
+      const ownedKeys = Object.keys(collection).filter(k => k.startsWith(lang + ":"));
 
-    function updateMyCollection() {
-      const lang = languageSelect.value;
-      const ownedCards = Object.keys(collection).filter(k => k.startsWith(lang + ":"));
-
-      if (ownedCards.length === 0) {
+      if (ownedKeys.length === 0) {
         myCollectionContent.innerHTML = "Aún no tienes cartas marcadas.";
         return;
       }
 
-      myCollectionContent.innerHTML = `<strong>Total cartas: ${ownedCards.length}</strong>`;
+      const ids = ownedKeys.map(k => k.split(":")[1]);
+
+      const data = await fetchJSON(`${API_BASE}/cards?q=id:${ids.join(" OR ")}`);
+      const cards = data.data || [];
+
+      const term = (searchMyCards.value || "").toLowerCase();
+
+      const filtered = cards.filter(c => c.name.toLowerCase().includes(term));
+
+      if (!filtered.length) {
+        myCollectionContent.innerHTML = "No hay cartas que coincidan con la búsqueda.";
+        return;
+      }
+
+      let html = `<div class="card-grid">`;
+
+      filtered.forEach(card => {
+        html += `
+          <div class="card-item">
+            <img src="${card.images.small}" onclick="openModal('${card.images.large}')">
+            <span class="card-name">${card.name} (#${card.number})</span>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+
+      myCollectionContent.innerHTML = html;
+    }
+
+    function openModal(src) {
+      modalImg.src = src;
+      modal.style.display = "flex";
     }
 
     modal.addEventListener("click", () => {
@@ -404,9 +479,12 @@
       });
     });
 
+    searchMyCards.addEventListener("input", updateMyCollection);
+
     reloadBtn.addEventListener("click", loadSets);
 
     loadSets();
   </script>
+
 </body>
 </html>
