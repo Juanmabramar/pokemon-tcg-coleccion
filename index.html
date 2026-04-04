@@ -2,20 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colección Pokémon TCG</title>
 
-  <!-- Tipografía estilo Pokémon -->
+  <!-- Tipografías: Pokémon para títulos y Roboto para nombres de cartas -->
   <link href="https://fonts.cdnfonts.com/css/pokemon-solid" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
     body {
       margin: 0;
       background: #f0f2f5;
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif;
       color: #333;
     }
 
-    /* CABECERA */
+    /* ── CABECERA ── */
     header {
       background: #ffcb05;
       padding: 1rem 0.5rem;
@@ -24,32 +28,39 @@
       align-items: center;
       position: relative;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      overflow: hidden;
     }
 
-    /* Imágenes decorativas laterales */
     .side-img {
       position: absolute;
       top: 50%;
-      width: 70px;
-      opacity: 0.4;
+      width: 100px;
+      opacity: 0.8;
       transform: translateY(-50%);
+      transition: transform 0.3s ease;
     }
 
-    #left-img { left: 8px; }
-    #right-img { right: 8px; }
+    .side-img:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    #left-img  { left: 15px; }
+    #right-img { right: 15px; }
 
     #logo-tcg {
       max-width: 320px;
-      width: 70%;
+      width: 60%;
+      z-index: 2;
     }
 
+    /* ── CONTENEDOR ── */
     .container {
       padding: 1.5rem;
       max-width: 1100px;
       margin: auto;
     }
 
-    /* CONTROLES */
+    /* ── CONTROLES ── */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -57,13 +68,23 @@
       margin-bottom: 1.5rem;
       align-items: center;
       justify-content: center;
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     select, input[type="text"], button {
       padding: 0.6rem 0.8rem;
       border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     button {
@@ -71,20 +92,76 @@
       color: white;
       cursor: pointer;
       border: none;
+      transition: background 0.2s;
+      font-weight: 500;
     }
 
-    button:hover {
-      background: #1d4f7a;
+    button:hover { background: #1d4f7a; }
+
+    /* ── FILTRO "SOLO MIS CARTAS" ── */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #f8f9fa;
+      padding: 0.5rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid #dee2e6;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
     }
 
-    /* COLECCIONES */
+    .toggle-container:hover {
+      border-color: #2a75bb;
+      background: #eef4f9;
+    }
+
+    .toggle-container input {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #2a75bb;
+    }
+
+    .toggle-label {
+      font-weight: 700;
+      color: #2a75bb;
+      font-size: 0.9rem;
+    }
+
+    /* ── BOTÓN BUSCADOR RÁPIDO ── */
+    #searchQuickBtn {
+      background: #e63946;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: bold;
+    }
+
+    #searchQuickBtn:hover { background: #b02030; }
+
+    /* ── SETS ── */
     .set {
       background: white;
-      padding: 0.6rem 0.8rem;   /* Mucho más pequeño */
-      margin-bottom: 0.6rem;    /* Más compacto */
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 0.6rem;
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.12);
-      min-height: auto;         /* ¡Elimina la altura forzada! */
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .set-bg-logo {
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 80%;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .set-header {
@@ -92,6 +169,9 @@
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
+      user-select: none;
+      position: relative;
+      z-index: 1;
     }
 
     .set-header strong {
@@ -107,9 +187,22 @@
       opacity: 0.7;
     }
 
+    .set-count {
+      font-size: 0.95rem;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .set-count.complete {
+      color: #2a9d2a;
+      font-weight: bold;
+    }
+
     .cards {
       margin-top: 1rem;
       display: none;
+      position: relative;
+      z-index: 1;
     }
 
     .search-cards {
@@ -120,7 +213,7 @@
       border: 1px solid #ccc;
     }
 
-    /* GRID DE CARTAS */
+    /* ── GRID DE CARTAS ── */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -136,164 +229,305 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      cursor: pointer;
+      position: relative;
+    }
+
+    .card-set-name {
+      font-size: 0.7rem;
+      color: #7f8c8d;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      background: #f1f2f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .card-item img {
       width: 100%;
       border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.15s;
     }
+
+    .card-item img:hover { transform: scale(1.03); }
 
     .card-name {
-      font-size: 0.85rem;
-      margin-top: 0.4rem;
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 0.6rem;
+      color: #2c3e50;
+      letter-spacing: 0.2px;
+      line-height: 1.2;
     }
 
-    .owned {
-      color: green;
+    /* ── CHECKBOX ESTILIZADO ── */
+    .card-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.35rem;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+
+    .card-checkbox-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #2a75bb;
+      cursor: pointer;
+    }
+
+    .owned-badge {
+      color: #2a9d2a;
       font-weight: bold;
       font-size: 0.8rem;
     }
 
-    /* MODAL */
+    .not-owned-badge {
+      color: #999;
+      font-size: 0.8rem;
+    }
+
+    /* ── SPINNER DE CARGA ── */
+    .spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      gap: 0.5rem;
+      color: #666;
+    }
+
+    .spinner::before {
+      content: "";
+      width: 22px;
+      height: 22px;
+      border: 3px solid #ccc;
+      border-top-color: #2a75bb;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── MODAL IMAGEN AMPLIADA ── */
     .modal {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.85);
       display: none;
       justify-content: center;
       align-items: center;
-      z-index: 999;
+      z-index: 2000;
+    }
+
+    .modal-inner {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      width: 90%;
+      max-width: 500px;
     }
 
     .modal img {
-      width: 90%;
-      max-width: 450px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
-    /* MI COLECCIÓN */
-    #myCollection {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+    .modal-close {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      background: #ffcb05;
+      border: 2px solid #2a75bb;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2001;
     }
 
-    #myCollection h2 {
-      margin-top: 0;
+    /* ── MODAL BUSCADOR RÁPIDO ── */
+    #quickSearchModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .search-box {
+      background: white;
+      border-radius: 14px;
+      padding: 1.5rem;
+      max-width: 550px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .search-box h2 {
+      margin: 0;
+      font-size: 1.3rem;
       text-align: center;
+      color: #1d4f7a;
     }
 
-    /* RESPONSIVE */
+    .search-input-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .search-input-group input {
+      flex: 1;
+    }
+
+    #quickSearchResults {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important; /* Forzado a 2 columnas con prioridad */
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
-      .card-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .set-header strong {
-        font-size: 1.15rem;
-      }
-      .set {
-        min-height: 22vh;
-      }
-      #logo-tcg {
-        max-width: 260px;
-      }
-      .side-img {
-        width: 60px;
-      }
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+      #quickSearchResults { grid-template-columns: repeat(2, 1fr) !important; }
+      .set-header strong { font-size: 1.15rem; }
+      #logo-tcg { max-width: 260px; }
+      .side-img { width: 70px; }
     }
 
     @media (max-width: 400px) {
-      .card-grid {
-        grid-template-columns: repeat(1, 1fr);
-      }
-      .side-img {
-        display: none;
-      }
+      .card-grid { grid-template-columns: repeat(1, 1fr); }
+      .side-img { display: none; }
     }
   </style>
 </head>
 
 <body>
   <header>
-    <!-- Mew izquierda -->
+    <!-- Mew estético -->
     <img id="left-img" class="side-img"
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNaU6fUwNeZno0zVOpvKrgNbu-FsT3pfyCyA&s">
-
-    <!-- Logo TCG español -->
+      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png"
+      alt="Mew">
+    
     <img id="logo-tcg"
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Pok%C3%A9mon_Trading_Card_Game_logo.svg/1280px-Pok%C3%A9mon_Trading_Card_Game_logo.svg.png">
-
-    <!-- Mewtwo derecha -->
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Pok%C3%A9mon_Trading_Card_Game_logo.svg/1280px-Pok%C3%A9mon_Trading_Card_Game_logo.svg.png"
+      alt="Pokémon TCG">
+    
+    <!-- Mewtwo estético -->
     <img id="right-img" class="side-img"
-      src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c8de2ede-79ce-413b-93f2-5e70bff18f32/dahpkqo-c43cd092-2a4c-4f5f-a0c0-7e52364fb40d.png/v1/fill/w_1024,h_1068/mewtwo_emblem_by_eternalsonicstar_dahpkqo-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTA2OCIsInBhdGgiOiIvZi9jOGRlMmVkZS03OWNlLTQxM2ItOTNmMi01ZTcwYmZmMThmMzIvZGFocGtxby1jNDNjZDA5Mi0yYTRjLTRmNWYtYTBjMC03ZTUyMzY0ZmI0MGQucG5nIiwid2lkdGgiOiI8PTEwMjQifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.WWj9-18p8COqiK38g64TiqFlIypNmkQRU_7ZHTf8ILo">
+      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
+      alt="Mewtwo">
   </header>
+
   <div class="container">
 
+    <!-- CONTROLES -->
     <div class="controls">
-      <label><strong>Idioma:</strong></label>
-      <select id="languageSelect">
-        <option value="en">Inglés</option>
-        <option value="es">Español</option>
-        <option value="fr">Francés</option>
-        <option value="de">Alemán</option>
-        <option value="it">Italiano</option>
-      </select>
+      <div class="control-group">
+        <label><strong>Idioma:</strong></label>
+        <select id="languageSelect">
+          <option value="en">Inglés</option>
+          <option value="es">Español</option>
+          <option value="fr">Francés</option>
+          <option value="de">Alemán</option>
+          <option value="it">Italiano</option>
+        </select>
+      </div>
 
-      <input type="text" id="searchSets" placeholder="Buscar colecciones..." />
-      <button id="reloadBtn">Recargar</button>
+      <div class="control-group">
+        <input type="text" id="searchSets" placeholder="Buscar colecciones..." />
+      </div>
+
+      <!-- FILTRO SOLO MIS CARTAS -->
+      <label class="toggle-container" for="onlyOwnedToggle">
+        <input type="checkbox" id="onlyOwnedToggle">
+        <span class="toggle-label">Ver solo mis cartas</span>
+      </label>
+
+      <div class="control-group">
+        <button id="searchQuickBtn">🔍 Buscar carta rápida</button>
+        <button id="reloadBtn">Recargar</button>
+      </div>
     </div>
 
-    <div id="setsContainer">Cargando sets...</div>
-
-    <div id="myCollection">
-      <h2>Mi colección</h2>
-      <input
-        type="text"
-        id="searchMyCards"
-        placeholder="Buscar en mi colección..."
-        style="width:100%; padding:0.5rem; margin-bottom:1rem; border-radius:8px; border:1px solid #ccc;"
-      >
-      <div id="myCollectionContent">Aún no tienes cartas marcadas.</div>
-    </div>
+    <div id="setsContainer"><div class="spinner">Cargando sets...</div></div>
   </div>
 
-  <!-- MODAL -->
+  <!-- MODAL IMAGEN AMPLIADA -->
   <div id="modal" class="modal">
-    <img id="modalImg" src="">
+    <div class="modal-inner">
+      <button class="modal-close" id="modalCloseBtn" title="Cerrar">✕</button>
+      <img id="modalImg" src="" alt="Carta ampliada">
+    </div>
   </div>
+
+  <!-- MODAL BUSCADOR RÁPIDO -->
+  <div id="quickSearchModal">
+    <div class="search-box">
+      <h2>🔍 Buscador Rápido de Cartas</h2>
+      <p style="font-size: 0.85rem; color: #666; text-align: center; margin-top: 0;">Busca por nombre o número para añadir a tu colección sin buscar en los sets.</p>
+
+      <div class="search-input-group">
+        <input type="text" id="quickSearchInput" placeholder="Ej: Pikachu 25 o Charizard...">
+        <button id="doQuickSearchBtn">Buscar</button>
+      </div>
+
+      <div id="quickSearchStatus"></div>
+      <div id="quickSearchResults"></div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+        <button id="closeQuickSearchBtn" style="background: #6c757d;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const API_BASE = "https://api.pokemontcg.io/v2";
+    /* ──────────────────────────────────────────────────────────────────────────────
+       CONFIGURACIÓN Y ESTADO
+       ────────────────────────────────────────────────────────────────────────────── */
+    const API_BASE    = "https://api.pokemontcg.io/v2";
     const STORAGE_KEY = "pokemon_tcg_collection";
 
-    const languageSelect = document.getElementById("languageSelect");
-    const searchSets = document.getElementById("searchSets");
-    const searchMyCards = document.getElementById("searchMyCards");
-    const reloadBtn = document.getElementById("reloadBtn");
-    const setsContainer = document.getElementById("setsContainer");
-    const myCollectionContent = document.getElementById("myCollectionContent");
-
-    const modal = document.getElementById("modal");
-    const modalImg = document.getElementById("modalImg");
-
-    let allSets = [];
+    let allSets    = [];
     let collection = loadCollection();
 
+    /* ──────────────────────────────────────────────────────────────────────────────
+       COLECCIÓN (localStorage)
+       ────────────────────────────────────────────────────────────────────────────── */
     function loadCollection() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      } catch {
-        return {};
-      }
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+      catch { return {}; }
     }
 
     function saveCollection() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
-      updateMyCollection();
+      refreshSetCounters();
+      applyGlobalFilters(); // Re-filtrar si el toggle está activo
     }
 
     function isOwned(id, lang) {
@@ -307,51 +541,89 @@
       saveCollection();
     }
 
+    /* ──────────────────────────────────────────────────────────────────────────────
+       UTILIDADES
+       ────────────────────────────────────────────────────────────────────────────── */
     async function fetchJSON(url) {
       const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
     }
 
+    async function fetchAllCards(setId) {
+      let page = 1;
+      let all  = [];
+      while (true) {
+        const data = await fetchJSON(`${API_BASE}/cards?q=set.id:${setId}&pageSize=250&page=${page}`);
+        all = all.concat(data.data || []);
+        if (all.length >= data.totalCount) break;
+        page++;
+      }
+      return all;
+    }
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       CARGA DE SETS
+       ────────────────────────────────────────────────────────────────────────────── */
     async function loadSets() {
-      setsContainer.textContent = "Cargando sets...";
-      const data = await fetchJSON(`${API_BASE}/sets`);
-      allSets = data.data;
-      renderSets(allSets);
-      updateMyCollection();
+      const setsContainer = document.getElementById("setsContainer");
+      setsContainer.innerHTML = '<div class="spinner">Cargando sets...</div>';
+      try {
+        const data = await fetchJSON(`${API_BASE}/sets`); // Restaurar orden original
+        allSets = data.data;
+        renderSets(allSets);
+      } catch (e) {
+        setsContainer.textContent = "Error al cargar los sets. Inténtalo de nuevo.";
+      }
     }
 
     function renderSets(sets) {
+      const setsContainer = document.getElementById("setsContainer");
       setsContainer.innerHTML = "";
 
       sets.forEach(set => {
         const div = document.createElement("div");
-        div.className = "set";
+        div.className  = "set";
+        div.id = `set-container-${set.id}`;
         div.dataset.name = set.name.toLowerCase();
+        div.dataset.setId = set.id;
+
+        // Fondo tematizado sutil con el logo del set
+        if (set.images && set.images.logo) {
+          const bgLogo = document.createElement("img");
+          bgLogo.src = set.images.logo;
+          bgLogo.className = "set-bg-logo";
+          div.appendChild(bgLogo);
+        }
 
         const header = document.createElement("div");
         header.className = "set-header";
-
-        const total = set.total || 0;
-        const owned = 0; // contador visual (no exacto)
-
-        header.innerHTML = `<strong>${set.name}</strong> <span>${owned} / ${total}</span>`;
+        header.innerHTML = `
+          <strong>${set.name}</strong>
+          <span class="set-count" id="count-${set.id}">0 / ${set.total}</span>
+        `;
 
         const cardsDiv = document.createElement("div");
         cardsDiv.className = "cards";
-        cardsDiv.textContent = "Cargando cartas...";
+        cardsDiv.id = `cards-div-${set.id}`;
+        cardsDiv.innerHTML = '<div class="spinner">Cargando cartas...</div>';
 
         header.addEventListener("click", async () => {
           if (cardsDiv.style.display === "block") {
             cardsDiv.style.display = "none";
             return;
           }
-
           cardsDiv.style.display = "block";
 
           if (!cardsDiv.dataset.loaded) {
-            const detail = await fetchJSON(`${API_BASE}/cards?q=set.id:${set.id}`);
-            renderCards(cardsDiv, detail.data, set.id);
-            cardsDiv.dataset.loaded = "true";
+            try {
+              const cards = await fetchAllCards(set.id);
+              cardsDiv.dataset.allCards = JSON.stringify(cards); // Guardar para re-filtrar
+              renderCards(cardsDiv, cards);
+              cardsDiv.dataset.loaded = "true";
+            } catch {
+              cardsDiv.innerHTML = "<p>Error al cargar las cartas.</p>";
+            }
           }
         });
 
@@ -359,132 +631,254 @@
         div.appendChild(cardsDiv);
         setsContainer.appendChild(div);
       });
+      refreshSetCounters();
+      applyGlobalFilters();
     }
 
-    function renderCards(container, cards, setId) {
-      container.innerHTML = "";
+    function refreshSetCounters() {
+      const lang = document.getElementById("languageSelect").value;
+      allSets.forEach(set => {
+        const el = document.getElementById(`count-${set.id}`);
+        if (!el) return;
+        const ownedCount = Object.keys(collection).filter(k => k.startsWith(lang + ":") && k.split(":")[1].startsWith(set.id + "-")).length;
+        el.textContent = `${ownedCount} / ${set.total}`;
+        el.className = "set-count" + (ownedCount === set.total && set.total > 0 ? " complete" : "");
+        
+        // Guardar el conteo en el dataset para el filtrado global
+        const setDiv = document.getElementById(`set-container-${set.id}`);
+        if (setDiv) setDiv.dataset.ownedCount = ownedCount;
+      });
+    }
 
-      const lang = languageSelect.value;
+    /* ──────────────────────────────────────────────────────────────────────────────
+       FILTRADO GLOBAL
+       ────────────────────────────────────────────────────────────────────────────── */
+    function applyGlobalFilters() {
+      const onlyOwned = document.getElementById("onlyOwnedToggle").checked;
+      const searchTerm = document.getElementById("searchSets").value.toLowerCase();
+      const lang = document.getElementById("languageSelect").value;
+
+      document.querySelectorAll(".set").forEach(setDiv => {
+        const nameMatch = setDiv.dataset.name.includes(searchTerm);
+        const ownedCount = parseInt(setDiv.dataset.ownedCount || "0");
+        
+        let visible = nameMatch;
+        if (onlyOwned && ownedCount === 0) visible = false;
+
+        setDiv.style.display = visible ? "block" : "none";
+
+        // Si el set está abierto y el filtro está activo, re-renderizar sus cartas
+        const setId = setDiv.dataset.setId;
+        const cardsDiv = document.getElementById(`cards-div-${setId}`);
+        if (cardsDiv && cardsDiv.dataset.loaded === "true") {
+          const allCards = JSON.parse(cardsDiv.dataset.allCards);
+          renderCards(cardsDiv, allCards);
+        }
+      });
+    }
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       RENDERIZADO DE CARTAS
+       ────────────────────────────────────────────────────────────────────────────── */
+    function renderCards(container, cards, showSetName = false) {
+      container.innerHTML = "";
+      const lang = document.getElementById("languageSelect").value;
+      const onlyOwned = document.getElementById("onlyOwnedToggle").checked;
 
       const search = document.createElement("input");
       search.type = "text";
-      search.placeholder = "Buscar cartas...";
+      search.placeholder = "Filtrar en este set...";
       search.className = "search-cards";
 
       const list = document.createElement("div");
       list.className = "card-grid";
 
-      function updateList() {
+      function buildList() {
         const term = search.value.toLowerCase();
         list.innerHTML = "";
+        
+        let filtered = cards.filter(c => c.name.toLowerCase().includes(term));
+        if (onlyOwned && !showSetName) { // No filtrar por posesión en búsqueda rápida a menos que se quiera
+          filtered = filtered.filter(c => isOwned(c.id, lang));
+        }
 
-        cards
-          .filter(c => c.name.toLowerCase().includes(term))
-          .forEach(card => {
-            const row = document.createElement("div");
-            row.className = "card-item";
+        filtered.forEach(card => {
+          list.appendChild(createCardElement(card, lang, showSetName));
+        });
 
-            const img = document.createElement("img");
-            img.src = card.images.small;
-
-            img.addEventListener("click", () => {
-              modalImg.src = card.images.large;
-              modal.style.display = "flex";
-            });
-
-            const chk = document.createElement("input");
-            chk.type = "checkbox";
-            chk.checked = isOwned(card.id, lang);
-
-            const name = document.createElement("span");
-            name.className = "card-name";
-            name.textContent = `${card.name} (#${card.number})`;
-
-            const status = document.createElement("span");
-            status.textContent = chk.checked ? "La tengo" : "No la tengo";
-            status.className = chk.checked ? "owned" : "";
-
-            chk.addEventListener("change", () => {
-              setOwned(card.id, lang, chk.checked);
-              status.textContent = chk.checked ? "La tengo" : "No la tengo";
-              status.classList.toggle("owned", chk.checked);
-              updateMyCollection();
-            });
-
-            row.append(img, chk, name, status);
-            list.appendChild(row);
-          });
+        if (filtered.length === 0) {
+          list.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999; padding: 1rem;">No hay cartas que coincidan.</p>';
+        }
       }
 
-      search.addEventListener("input", updateList);
-
-      container.appendChild(search);
-      container.appendChild(list);
-
-      updateList();
+      if (!showSetName) {
+        search.addEventListener("input", buildList);
+        container.append(search, list);
+      } else {
+        container.append(list);
+      }
+      buildList();
     }
 
-    async function updateMyCollection() {
-      const lang = languageSelect.value;
-      const ownedKeys = Object.keys(collection).filter(k => k.startsWith(lang + ":"));
+    function createCardElement(card, lang, showSetName = false) {
+      const item = document.createElement("div");
+      item.className = "card-item";
 
-      if (ownedKeys.length === 0) {
-        myCollectionContent.innerHTML = "Aún no tienes cartas marcadas.";
-        return;
+      // Nombre del set sobre la carta (para búsqueda rápida)
+      if (showSetName && card.set) {
+        const setName = document.createElement("div");
+        setName.className = "card-set-name";
+        setName.textContent = card.set.name;
+        item.appendChild(setName);
       }
 
-      const ids = ownedKeys.map(k => k.split(":")[1]);
-
-      const data = await fetchJSON(`${API_BASE}/cards?q=id:${ids.join(" OR ")}`);
-      const cards = data.data || [];
-
-      const term = (searchMyCards.value || "").toLowerCase();
-
-      const filtered = cards.filter(c => c.name.toLowerCase().includes(term));
-
-      if (!filtered.length) {
-        myCollectionContent.innerHTML = "No hay cartas que coincidan con la búsqueda.";
-        return;
+      const img = document.createElement("img");
+      // Placeholder si no hay imagen en la API
+      const placeholder = "https://tcg.pokemon.com/assets/img/global/tcg-card-back.png";
+      
+      // BUG FIX: Algunos sets nuevos como Ascended Heroes tienen IDs de imagen diferentes
+      // Intentamos construir la URL si no viene en el objeto images
+      let smallImg = card.images ? card.images.small : null;
+      let largeImg = card.images ? card.images.large : null;
+      
+      if (!smallImg) {
+        // Intento de reconstrucción manual para sets con bugs de API
+        smallImg = `https://images.pokemontcg.io/${card.set.id}/${card.number}.png`;
+        largeImg = `https://images.pokemontcg.io/${card.set.id}/${card.number}_hires.png`;
       }
 
-      let html = `<div class="card-grid">`;
+      img.src = smallImg;
+      
+      // Manejar error de carga si la URL de la API falla
+      img.onerror = () => { img.src = placeholder; };
+      
+      img.onclick = () => {
+        openModal(largeImg || placeholder);
+      };
 
-      filtered.forEach(card => {
-        html += `
-          <div class="card-item">
-            <img src="${card.images.small}" onclick="openModal('${card.images.large}')">
-            <span class="card-name">${card.name} (#${card.number})</span>
-          </div>
-        `;
-      });
+      const name = document.createElement("span");
+      name.className = "card-name";
+      name.textContent = `${card.name} (#${card.number})`;
 
-      html += `</div>`;
+      const label = document.createElement("label");
+      label.className = "card-checkbox-label";
 
-      myCollectionContent.innerHTML = html;
+      const chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.checked = isOwned(card.id, lang);
+
+      const badge = document.createElement("span");
+      badge.textContent = chk.checked ? "La tengo" : "No la tengo";
+      badge.className = chk.checked ? "owned-badge" : "not-owned-badge";
+
+      chk.onchange = () => {
+        setOwned(card.id, lang, chk.checked);
+        badge.textContent = chk.checked ? "La tengo" : "No la tengo";
+        badge.className = chk.checked ? "owned-badge" : "not-owned-badge";
+      };
+
+      label.append(chk, badge);
+      item.append(img, name, label);
+      return item;
     }
 
+    /* ──────────────────────────────────────────────────────────────────────────────
+       MODAL IMAGEN
+       ────────────────────────────────────────────────────────────────────────────── */
     function openModal(src) {
+      const modal = document.getElementById("modal");
+      const modalImg = document.getElementById("modalImg");
       modalImg.src = src;
       modal.style.display = "flex";
     }
 
-    modal.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
+    document.getElementById("modalCloseBtn").onclick = () => {
+      document.getElementById("modal").style.display = "none";
+    };
 
-    searchSets.addEventListener("input", () => {
-      const term = searchSets.value.toLowerCase();
-      document.querySelectorAll(".set").forEach(div => {
-        div.style.display = div.dataset.name.includes(term) ? "block" : "none";
-      });
-    });
+    document.getElementById("modal").onclick = (e) => {
+      if (e.target.classList.contains("modal") || e.target.classList.contains("modal-inner")) {
+        document.getElementById("modal").style.display = "none";
+      }
+    };
 
-    searchMyCards.addEventListener("input", updateMyCollection);
+    /* ──────────────────────────────────────────────────────────────────────────────
+       BUSCADOR RÁPIDO (GRATUITO)
+       ────────────────────────────────────────────────────────────────────────────── */
+    const quickModal = document.getElementById("quickSearchModal");
+    const quickInput = document.getElementById("quickSearchInput");
+    const quickResults = document.getElementById("quickSearchResults");
+    const quickStatus = document.getElementById("quickSearchStatus");
 
-    reloadBtn.addEventListener("click", loadSets);
+    document.getElementById("searchQuickBtn").onclick = () => {
+      quickModal.style.display = "flex";
+      quickInput.focus();
+    };
 
+    document.getElementById("closeQuickSearchBtn").onclick = () => {
+      quickModal.style.display = "none";
+    };
+
+    async function doQuickSearch() {
+      const query = quickInput.value.trim();
+      if (!query) return;
+
+      quickStatus.innerHTML = '<div class="spinner">Buscando...</div>';
+      quickResults.innerHTML = "";
+
+      try {
+        const data = await fetchJSON(`${API_BASE}/cards?q=name:"*${query}*"&pageSize=20`);
+        const cards = data.data || [];
+        quickStatus.innerHTML = `Se encontraron ${cards.length} resultados.`;
+        
+        const lang = document.getElementById("languageSelect").value;
+        
+        // Crear un contenedor específico para los resultados del buscador rápido
+        const list = document.createElement("div");
+        list.id = "quickSearchResultsGrid"; // Usar un ID único para el grid
+        list.style.display = "grid";
+        list.style.gridTemplateColumns = "repeat(2, 1fr)"; // Forzar 2 columnas iguales
+        list.style.gap = "1rem";
+        list.style.width = "100%"; // Ocupar todo el ancho del modal
+        list.style.boxSizing = "border-box"; // Incluir padding en el ancho
+        list.style.marginTop = "1rem";
+        list.style.padding = "0"; // Eliminar padding interno
+        
+        // Asegurar que el contenedor padre no tenga restricciones
+        quickResults.style.padding = "0";
+        quickResults.style.width = "100%";
+        
+        cards.forEach(card => {
+          const cardEl = createCardElement(card, lang, true);
+          cardEl.style.width = "100%"; // Asegurar que la carta ocupe su celda
+          cardEl.style.maxWidth = "none"; // Eliminar cualquier ancho máximo
+          list.appendChild(cardEl);
+        });
+        
+        quickResults.appendChild(list);
+      } catch (e) {
+        quickStatus.textContent = "Error en la búsqueda.";
+      }
+    }
+
+    document.getElementById("doQuickSearchBtn").onclick = doQuickSearch;
+    quickInput.onkeypress = (e) => { if (e.key === "Enter") doQuickSearch(); };
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       EVENTOS GLOBALES
+       ────────────────────────────────────────────────────────────────────────────── */
+    document.getElementById("searchSets").oninput = applyGlobalFilters;
+    document.getElementById("onlyOwnedToggle").onchange = applyGlobalFilters;
+    
+    document.getElementById("languageSelect").onchange = () => {
+      refreshSetCounters();
+      applyGlobalFilters();
+    };
+    
+    document.getElementById("reloadBtn").onclick = loadSets;
+
+    // Iniciar
     loadSets();
   </script>
-
 </body>
 </html>
