@@ -378,14 +378,15 @@
       background: white;
       border-radius: 14px;
       padding: 1.5rem;
-      max-width: 550px;
-      width: 92%;
+      width: 95%;
+      max-width: 1200px; /* Ancho máximo mayor para pantallas grandes */
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 6px 20px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      transition: width 0.3s ease;
     }
 
     .search-box h2 {
@@ -405,23 +406,40 @@
     }
 
     #quickSearchResults {
-      display: grid !important;
-      grid-template-columns: repeat(2, 1fr) !important; /* Forzado a 2 columnas con prioridad */
-      gap: 1rem;
+      display: block !important; /* El grid se aplicará al contenedor interno */
       margin-top: 1rem;
+      width: 100%;
+    }
+
+    /* Clase para el grid responsive del buscador */
+    .quick-grid-responsive {
+      display: grid;
+      /* Columnas adaptativas: mínimo 200px, máximo lo que quepa */
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      padding: 0.5rem;
     }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 600px) {
+    @media (max-width: 900px) {
+      .card-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 700px) {
       .card-grid { grid-template-columns: repeat(2, 1fr); }
-      #quickSearchResults { grid-template-columns: repeat(2, 1fr) !important; }
-      .set-header strong { font-size: 1.15rem; }
-      #logo-tcg { max-width: 260px; }
-      .side-img { width: 70px; }
+      .quick-grid-responsive { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    }
+
+    @media (max-width: 500px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .quick-grid-responsive { grid-template-columns: 1fr; }
+      .set-header strong { font-size: 1.1rem; }
+      #logo-tcg { max-width: 240px; }
+      .side-img { width: 60px; }
     }
 
     @media (max-width: 400px) {
-      .card-grid { grid-template-columns: repeat(1, 1fr); }
       .side-img { display: none; }
     }
   </style>
@@ -835,23 +853,10 @@
         
         // Crear un contenedor específico para los resultados del buscador rápido
         const list = document.createElement("div");
-        list.id = "quickSearchResultsGrid"; // Usar un ID único para el grid
-        list.style.display = "grid";
-        list.style.gridTemplateColumns = "repeat(2, 1fr)"; // Forzar 2 columnas iguales
-        list.style.gap = "1rem";
-        list.style.width = "100%"; // Ocupar todo el ancho del modal
-        list.style.boxSizing = "border-box"; // Incluir padding en el ancho
-        list.style.marginTop = "1rem";
-        list.style.padding = "0"; // Eliminar padding interno
-        
-        // Asegurar que el contenedor padre no tenga restricciones
-        quickResults.style.padding = "0";
-        quickResults.style.width = "100%";
+        list.className = "quick-grid-responsive"; // Usar la clase CSS responsive
         
         cards.forEach(card => {
           const cardEl = createCardElement(card, lang, true);
-          cardEl.style.width = "100%"; // Asegurar que la carta ocupe su celda
-          cardEl.style.maxWidth = "none"; // Eliminar cualquier ancho máximo
           list.appendChild(cardEl);
         });
         
