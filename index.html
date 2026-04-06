@@ -67,7 +67,7 @@
     /* ── CONTENEDOR ── */
     .container {
       padding: 1.5rem;
-      max-width: 1100px;
+      max-width: 1200px;
       margin: auto;
     }
 
@@ -83,6 +83,9 @@
       padding: 1rem;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 10px;
+      z-index: 100;
     }
 
     .control-group {
@@ -108,6 +111,30 @@
     }
 
     button:hover { background: #1d4f7a; }
+
+    /* ── BOTONES DE MODO ── */
+    .mode-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+
+    .mode-btn {
+      background: #fff;
+      color: #2a75bb;
+      border: 2px solid #2a75bb;
+      padding: 0.5rem 1.2rem;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-btn.active {
+      background: #2a75bb;
+      color: #fff;
+    }
 
     /* ── FILTRO "SOLO MIS CARTAS" ── */
     .toggle-container {
@@ -224,6 +251,139 @@
       border: 1px solid #ccc;
     }
 
+    /* ── VISION BINDER (POKEDEX) ── */
+    .region-section {
+      margin-bottom: 1rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .region-header {
+      background: #f8f9fa;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 2px solid #ffcb05;
+      transition: background 0.2s;
+    }
+
+    .region-header:hover {
+      background: #eef4f9;
+    }
+
+    .region-title {
+      font-family: 'Pokemon Solid', sans-serif;
+      color: #2a75bb;
+      letter-spacing: 2px;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .region-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .region-progress {
+      font-weight: bold;
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    .region-progress.complete {
+      color: #2a9d2a;
+    }
+
+    .region-arrow {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .region-section.open .region-arrow {
+      transform: rotate(180deg);
+    }
+
+    .pokedex-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+      padding: 1.5rem;
+    }
+
+    .region-section.open .pokedex-grid {
+      display: grid;
+    }
+
+    .pokedex-item {
+      background: #fdfdfd;
+      border-radius: 12px;
+      padding: 0.8rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      border: 2px solid #eee;
+    }
+
+    .pokedex-item:hover {
+      transform: translateY(-5px);
+      border-color: #ffcb05;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .pokedex-item.owned {
+      background: #e8f5e9;
+      border-color: #4caf50;
+    }
+
+    .pokedex-item.completed {
+      background: #f3e5f5;
+      border-color: #9c27b0;
+    }
+
+    .pokedex-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+
+    .pokedex-number {
+      font-size: 0.75rem;
+      color: #777;
+      display: block;
+    }
+
+    .pokedex-name {
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-transform: capitalize;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .owned-icon {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .owned-icon img {
+      width: 100%;
+      height: 100%;
+    }
+
     /* ── GRID DE CARTAS ── */
     .card-grid {
       display: grid;
@@ -276,6 +436,28 @@
       letter-spacing: 0.2px;
       line-height: 1.2;
     }
+
+    /* ── PRECIOS ── */
+    .card-prices {
+      margin-top: 8px;
+      width: 100%;
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: #f9f9f9;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 1px 4px;
+    }
+
+    .price-label { font-weight: bold; color: #555; }
+    .price-value { color: #e63946; font-weight: bold; }
 
     /* ── CHECKBOX ESTILIZADO ── */
     .card-checkbox-label {
@@ -390,14 +572,13 @@
       border-radius: 14px;
       padding: 1.5rem;
       width: 95%;
-      max-width: 1200px; /* Ancho máximo mayor para pantallas grandes */
+      max-width: 1200px;
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 6px 20px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      transition: width 0.3s ease;
       position: relative;
     }
 
@@ -417,12 +598,6 @@
       align-items: center;
       justify-content: center;
       z-index: 1001;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
-    .search-box-close:hover {
-      background: #2a75bb;
-      color: white;
     }
 
     .search-box h2 {
@@ -437,20 +612,8 @@
       gap: 0.5rem;
     }
 
-    .search-input-group input {
-      flex: 1;
-    }
-
-    #quickSearchResults {
-      display: block !important; /* El grid se aplicará al contenedor interno */
-      margin-top: 1rem;
-      width: 100%;
-    }
-
-    /* Clase para el grid responsive del buscador */
     .quick-grid-responsive {
       display: grid;
-      /* Columnas adaptativas: mínimo 200px, máximo lo que quepa */
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1.5rem;
       width: 100%;
@@ -474,31 +637,22 @@
       #logo-tcg { max-width: 240px; }
       .side-img { width: 60px; }
     }
-
-    @media (max-width: 400px) {
-      .side-img { display: none; }
-    }
   </style>
 </head>
 
 <body>
   <header>
-    <!-- Mew estético -->
-    <img id="left-img" class="side-img"
-      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png"
-      alt="Mew">
-    
-    <img id="logo-tcg"
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Pok%C3%A9mon_Trading_Card_Game_logo.svg/1280px-Pok%C3%A9mon_Trading_Card_Game_logo.svg.png"
-      alt="Pokémon TCG">
-    
-    <!-- Mewtwo estético -->
-    <img id="right-img" class="side-img"
-      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
-      alt="Mewtwo">
+    <img id="left-img" class="side-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png" alt="Mew">
+    <img id="logo-tcg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Pok%C3%A9mon_Trading_Card_Game_logo.svg/1280px-Pok%C3%A9mon_Trading_Card_Game_logo.svg.png" alt="Pokémon TCG">
+    <img id="right-img" class="side-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png" alt="Mewtwo">
   </header>
 
   <div class="container">
+    <!-- BOTONES DE MODO -->
+    <div class="mode-buttons">
+      <button class="mode-btn active" id="modeSets">Colecciones</button>
+      <button class="mode-btn" id="modeBinder">Vision Binder</button>
+    </div>
 
     <!-- CONTROLES -->
     <div class="controls">
@@ -514,11 +668,10 @@
         </select>
       </div>
 
-      <div class="control-group">
+      <div class="control-group" id="searchSetsGroup">
         <input type="text" id="searchSets" placeholder="Buscar colecciones..." />
       </div>
 
-      <!-- FILTRO SOLO MIS CARTAS -->
       <label class="toggle-container" for="onlyOwnedToggle">
         <input type="checkbox" id="onlyOwnedToggle">
         <span class="toggle-label">Ver solo mis cartas</span>
@@ -530,13 +683,21 @@
       </div>
     </div>
 
-    <div id="setsContainer"><div class="spinner">Cargando sets...</div></div>
+    <!-- VISTA DE SETS -->
+    <div id="setsView">
+      <div id="setsContainer"><div class="spinner">Cargando sets...</div></div>
+    </div>
+
+    <!-- VISTA VISION BINDER -->
+    <div id="binderView" style="display: none;">
+      <div id="binderContainer"></div>
+    </div>
   </div>
 
   <!-- MODAL IMAGEN AMPLIADA -->
   <div id="modal" class="modal">
     <div class="modal-inner">
-      <button class="modal-close" id="modalCloseBtn" title="Cerrar">✕</button>
+      <button class="modal-close" id="modalCloseBtn">✕</button>
       <img id="modalImg" src="" alt="Carta ampliada">
     </div>
   </div>
@@ -545,10 +706,10 @@
   <div id="quickSearchModal">
     <div class="search-box">
       <button class="search-box-close" id="closeQuickSearchXBtn">✕</button>
-      <h2>🔍 Buscador Rápido de Cartas</h2>
-      <p style="font-size: 0.85rem; color: #666; text-align: center; margin-top: 0;">Busca por nombre o número para añadir a tu colección sin buscar en los sets.</p>
+      <h2 id="quickSearchTitle">🔍 Buscador Rápido de Cartas</h2>
+      <p id="quickSearchDesc" style="font-size: 0.85rem; color: #666; text-align: center; margin-top: 0;">Busca por nombre o número para añadir a tu colección.</p>
 
-      <div class="search-input-group" style="flex-wrap: wrap; gap: 0.5rem;">
+      <div class="search-input-group" id="quickSearchInputs" style="flex-wrap: wrap; gap: 0.5rem;">
         <input type="text" id="quickSearchInput" placeholder="Nombre (ej: Pikachu)" style="flex: 2; min-width: 150px;">
         <input type="text" id="quickSearchNumberInput" placeholder="Nº (ej: 25)" style="flex: 1; min-width: 80px;">
         <button id="doQuickSearchBtn">Buscar</button>
@@ -564,18 +725,28 @@
   </div>
 
   <script>
-    /* ──────────────────────────────────────────────────────────────────────────────
-       CONFIGURACIÓN Y ESTADO
-       ────────────────────────────────────────────────────────────────────────────── */
-    const API_BASE    = "https://api.pokemontcg.io/v2";
+    const API_BASE = "https://api.pokemontcg.io/v2";
     const STORAGE_KEY = "pokemon_tcg_collection";
+    const POKEMON_DATA_URL = "https://pokeapi.co/api/v2/pokemon?limit=1025";
+    
+    const REGIONS = {
+      "Kanto": [1, 151],
+      "Johto": [152, 251],
+      "Hoenn": [252, 386],
+      "Sinnoh": [387, 493],
+      "Unova": [494, 649],
+      "Kalos": [650, 721],
+      "Alola": [722, 809],
+      "Galar": [810, 898],
+      "Hisui": [899, 905],
+      "Paldea": [906, 1025]
+    };
 
-    let allSets    = [];
+    let allSets = [];
     let collection = loadCollection();
+    let pokedexData = [];
+    let pokemonTotalCards = {}; // Cache para saber cuántas cartas existen de cada pokemon
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       COLECCIÓN (localStorage)
-       ────────────────────────────────────────────────────────────────────────────── */
     function loadCollection() {
       try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
       catch { return {}; }
@@ -584,23 +755,35 @@
     function saveCollection() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
       refreshSetCounters();
-      applyGlobalFilters(); // Re-filtrar si el toggle está activo
+      if (document.getElementById("binderView").style.display === "block") {
+        renderBinder();
+      }
+      applyGlobalFilters();
     }
 
     function isOwned(id, lang) {
       return !!collection[`${lang}:${id}`];
     }
 
-    function setOwned(id, lang, owned) {
-      const key = `${lang}:${id}`;
-      if (owned) collection[key] = true;
-      else delete collection[key];
+    function getOwnedCardsOfPokemon(pokemonName) {
+      const lang = document.getElementById("languageSelect").value;
+      const nameLower = pokemonName.toLowerCase();
+      return Object.keys(collection).filter(key => {
+        if (!key.startsWith(lang + ":")) return false;
+        return collection[key] === pokemonName; 
+      });
+    }
+
+    function setOwned(card, lang, owned) {
+      const key = `${lang}:${card.id}`;
+      if (owned) {
+        collection[key] = card.name.split(' ')[0].split('-')[0].toLowerCase(); 
+      } else {
+        delete collection[key];
+      }
       saveCollection();
     }
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       UTILIDADES
-       ────────────────────────────────────────────────────────────────────────────── */
     async function fetchJSON(url) {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -609,7 +792,7 @@
 
     async function fetchAllCards(setId) {
       let page = 1;
-      let all  = [];
+      let all = [];
       while (true) {
         const data = await fetchJSON(`${API_BASE}/cards?q=set.id:${setId}&pageSize=250&page=${page}`);
         all = all.concat(data.data || []);
@@ -619,33 +802,28 @@
       return all;
     }
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       CARGA DE SETS
-       ────────────────────────────────────────────────────────────────────────────── */
     async function loadSets() {
       const setsContainer = document.getElementById("setsContainer");
       setsContainer.innerHTML = '<div class="spinner">Cargando sets...</div>';
       try {
-        const data = await fetchJSON(`${API_BASE}/sets`); // Restaurar orden original
+        const data = await fetchJSON(`${API_BASE}/sets`);
         allSets = data.data;
         renderSets(allSets);
       } catch (e) {
-        setsContainer.textContent = "Error al cargar los sets. Inténtalo de nuevo.";
+        setsContainer.textContent = "Error al cargar los sets.";
       }
     }
 
     function renderSets(sets) {
       const setsContainer = document.getElementById("setsContainer");
       setsContainer.innerHTML = "";
-
       sets.forEach(set => {
         const div = document.createElement("div");
-        div.className  = "set";
+        div.className = "set";
         div.id = `set-container-${set.id}`;
         div.dataset.name = set.name.toLowerCase();
         div.dataset.setId = set.id;
 
-        // Fondo tematizado sutil con el logo del set
         if (set.images && set.images.logo) {
           const bgLogo = document.createElement("img");
           bgLogo.src = set.images.logo;
@@ -655,10 +833,7 @@
 
         const header = document.createElement("div");
         header.className = "set-header";
-        header.innerHTML = `
-          <strong>${set.name}</strong>
-          <span class="set-count" id="count-${set.id}">0 / ${set.total}</span>
-        `;
+        header.innerHTML = `<strong>${set.name}</strong><span class="set-count" id="count-${set.id}">0 / ${set.total}</span>`;
 
         const cardsDiv = document.createElement("div");
         cardsDiv.className = "cards";
@@ -671,11 +846,10 @@
             return;
           }
           cardsDiv.style.display = "block";
-
           if (!cardsDiv.dataset.loaded) {
             try {
               const cards = await fetchAllCards(set.id);
-              cardsDiv.dataset.allCards = JSON.stringify(cards); // Guardar para re-filtrar
+              cardsDiv.dataset.allCards = JSON.stringify(cards);
               renderCards(cardsDiv, cards);
               cardsDiv.dataset.loaded = "true";
             } catch {
@@ -700,43 +874,30 @@
         const ownedCount = Object.keys(collection).filter(k => k.startsWith(lang + ":") && k.split(":")[1].startsWith(set.id + "-")).length;
         el.textContent = `${ownedCount} / ${set.total}`;
         el.className = "set-count" + (ownedCount === set.total && set.total > 0 ? " complete" : "");
-        
-        // Guardar el conteo en el dataset para el filtrado global
         const setDiv = document.getElementById(`set-container-${set.id}`);
         if (setDiv) setDiv.dataset.ownedCount = ownedCount;
       });
     }
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       FILTRADO GLOBAL
-       ────────────────────────────────────────────────────────────────────────────── */
     function applyGlobalFilters() {
       const onlyOwned = document.getElementById("onlyOwnedToggle").checked;
       const searchTerm = document.getElementById("searchSets").value.toLowerCase();
-      const lang = document.getElementById("languageSelect").value;
+      const isBinder = document.getElementById("binderView").style.display === "block";
+
+      if (isBinder) {
+        // En el binder, el filtro "solo mis cartas" se maneja dentro de renderBinder
+        return;
+      }
 
       document.querySelectorAll(".set").forEach(setDiv => {
         const nameMatch = setDiv.dataset.name.includes(searchTerm);
         const ownedCount = parseInt(setDiv.dataset.ownedCount || "0");
-        
         let visible = nameMatch;
         if (onlyOwned && ownedCount === 0) visible = false;
-
         setDiv.style.display = visible ? "block" : "none";
-
-        // Si el set está abierto y el filtro está activo, re-renderizar sus cartas
-        const setId = setDiv.dataset.setId;
-        const cardsDiv = document.getElementById(`cards-div-${setId}`);
-        if (cardsDiv && cardsDiv.dataset.loaded === "true") {
-          const allCards = JSON.parse(cardsDiv.dataset.allCards);
-          renderCards(cardsDiv, allCards);
-        }
       });
     }
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       RENDERIZADO DE CARTAS
-       ────────────────────────────────────────────────────────────────────────────── */
     function renderCards(container, cards, showSetName = false) {
       container.innerHTML = "";
       const lang = document.getElementById("languageSelect").value;
@@ -753,18 +914,15 @@
       function buildList() {
         const term = search.value.toLowerCase();
         list.innerHTML = "";
-        
         let filtered = cards.filter(c => c.name.toLowerCase().includes(term));
-        if (onlyOwned && !showSetName) { // No filtrar por posesión en búsqueda rápida a menos que se quiera
+        if (onlyOwned && !showSetName) {
           filtered = filtered.filter(c => isOwned(c.id, lang));
         }
-
         filtered.forEach(card => {
           list.appendChild(createCardElement(card, lang, showSetName));
         });
-
         if (filtered.length === 0) {
-          list.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999; padding: 1rem;">No hay cartas que coincidan.</p>';
+          list.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999; padding: 1rem;">No hay cartas.</p>';
         }
       }
 
@@ -781,7 +939,6 @@
       const item = document.createElement("div");
       item.className = "card-item";
 
-      // Nombre del set sobre la carta (para búsqueda rápida)
       if (showSetName && card.set) {
         const setName = document.createElement("div");
         setName.className = "card-set-name";
@@ -790,58 +947,224 @@
       }
 
       const img = document.createElement("img");
-      // Placeholder si no hay imagen en la API
       const placeholder = "https://tcg.pokemon.com/assets/img/global/tcg-card-back.png";
-      
-      // BUG FIX: Algunos sets nuevos como Ascended Heroes tienen IDs de imagen diferentes
-      // Intentamos construir la URL si no viene en el objeto images
-      let smallImg = card.images ? card.images.small : null;
-      let largeImg = card.images ? card.images.large : null;
-      
-      if (!smallImg) {
-        // Intento de reconstrucción manual para sets con bugs de API
-        smallImg = `https://images.pokemontcg.io/${card.set.id}/${card.number}.png`;
-        largeImg = `https://images.pokemontcg.io/${card.set.id}/${card.number}_hires.png`;
-      }
+      let smallImg = card.images ? card.images.small : `https://images.pokemontcg.io/${card.set.id}/${card.number}.png`;
+      let largeImg = card.images ? card.images.large : `https://images.pokemontcg.io/${card.set.id}/${card.number}_hires.png`;
 
       img.src = smallImg;
-      
-      // Manejar error de carga si la URL de la API falla
       img.onerror = () => { img.src = placeholder; };
-      
-      img.onclick = () => {
-        openModal(largeImg || placeholder);
-      };
+      img.onclick = () => openModal(largeImg || placeholder);
 
       const name = document.createElement("span");
       name.className = "card-name";
       name.textContent = `${card.name} (#${card.number})`;
 
+      // PRECIOS
+      const pricesDiv = document.createElement("div");
+      pricesDiv.className = "card-prices";
+      
+      const tcg = card.tcgplayer ? card.tcgplayer.prices : null;
+      const normalPrice = tcg ? (tcg.holofoil || tcg.normal || tcg.reverseHolofoil || Object.values(tcg)[0]) : null;
+      
+      const priceNM = normalPrice ? (normalPrice.market || normalPrice.mid || "N/A") : "N/A";
+      const pricePSA9 = priceNM !== "N/A" ? (priceNM * 3).toFixed(2) : "N/A";
+      const pricePSA10 = priceNM !== "N/A" ? (priceNM * 10).toFixed(2) : "N/A";
+
+      pricesDiv.innerHTML = `
+        <div class="price-row"><span class="price-label">NM:</span><span class="price-value">${priceNM !== "N/A" ? '$'+priceNM : 'N/A'}</span></div>
+        <div class="price-row"><span class="price-label">PSA 9:</span><span class="price-value">${pricePSA9 !== "N/A" ? '$'+pricePSA9 : 'N/A'}</span></div>
+        <div class="price-row"><span class="price-label">PSA 10:</span><span class="price-value">${pricePSA10 !== "N/A" ? '$'+pricePSA10 : 'N/A'}</span></div>
+      `;
+
       const label = document.createElement("label");
       label.className = "card-checkbox-label";
-
       const chk = document.createElement("input");
       chk.type = "checkbox";
       chk.checked = isOwned(card.id, lang);
-
       const badge = document.createElement("span");
       badge.textContent = chk.checked ? "La tengo" : "No la tengo";
       badge.className = chk.checked ? "owned-badge" : "not-owned-badge";
 
       chk.onchange = () => {
-        setOwned(card.id, lang, chk.checked);
+        setOwned(card, lang, chk.checked);
         badge.textContent = chk.checked ? "La tengo" : "No la tengo";
         badge.className = chk.checked ? "owned-badge" : "not-owned-badge";
       };
 
       label.append(chk, badge);
-      item.append(img, name, label);
+      item.append(img, name, pricesDiv, label);
       return item;
     }
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       MODAL IMAGEN
-       ────────────────────────────────────────────────────────────────────────────── */
+    /* ── VISION BINDER ── */
+    async function loadPokedex() {
+      if (pokedexData.length > 0) return;
+      try {
+        const data = await fetchJSON(POKEMON_DATA_URL);
+        pokedexData = data.results;
+      } catch (e) { console.error("Error cargando Pokedex"); }
+    }
+
+    async function getPokemonTotalCards(pokemonName) {
+      if (pokemonTotalCards[pokemonName]) return pokemonTotalCards[pokemonName];
+      try {
+        const data = await fetchJSON(`${API_BASE}/cards?q=name:"${pokemonName}"&pageSize=1`);
+        pokemonTotalCards[pokemonName] = data.totalCount || 0;
+        return pokemonTotalCards[pokemonName];
+      } catch { return 0; }
+    }
+
+    function renderBinder() {
+      const container = document.getElementById("binderContainer");
+      const onlyOwned = document.getElementById("onlyOwnedToggle").checked;
+      
+      // Guardar qué regiones estaban abiertas
+      const openRegions = Array.from(document.querySelectorAll(".region-section.open")).map(s => s.dataset.region);
+      
+      container.innerHTML = "";
+
+      for (const [region, range] of Object.entries(REGIONS)) {
+        const section = document.createElement("div");
+        section.className = "region-section";
+        section.dataset.region = region;
+        if (openRegions.includes(region)) section.classList.add("open");
+        
+        const header = document.createElement("div");
+        header.className = "region-header";
+        
+        const title = document.createElement("h3");
+        title.className = "region-title";
+        title.textContent = region;
+        
+        const info = document.createElement("div");
+        info.className = "region-info";
+        
+        const progress = document.createElement("span");
+        progress.className = "region-progress";
+        
+        const arrow = document.createElement("span");
+        arrow.className = "region-arrow";
+        arrow.textContent = "▼";
+
+        const grid = document.createElement("div");
+        grid.className = "pokedex-grid";
+
+        let ownedInRegion = 0;
+        let totalInRegion = range[1] - range[0] + 1;
+        let hasVisiblePokemon = false;
+
+        for (let i = range[0]; i <= range[1]; i++) {
+          const pokemon = pokedexData[i - 1];
+          if (!pokemon) continue;
+
+          const ownedCards = getOwnedCardsOfPokemon(pokemon.name);
+          const isOwned = ownedCards.length > 0;
+          
+          if (isOwned) ownedInRegion++;
+          if (onlyOwned && !isOwned) continue;
+          
+          hasVisiblePokemon = true;
+          const item = document.createElement("div");
+          item.className = "pokedex-item" + (isOwned ? " owned" : "");
+          
+          // Lógica de Master Ball (si tiene todas las cartas)
+          // Nota: Esto requiere una llamada a la API por cada pokemon, lo haremos bajo demanda o con cache
+          const totalCards = pokemonTotalCards[pokemon.name] || 0;
+          const isCompleted = totalCards > 0 && ownedCards.length >= totalCards;
+          if (isCompleted) item.classList.add("completed");
+
+          const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${i}.png`;
+          
+          let ballIcon = "";
+          if (isCompleted) {
+            ballIcon = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png";
+          } else if (isOwned) {
+            ballIcon = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png";
+          }
+
+          item.innerHTML = `
+            ${ballIcon ? `<div class="owned-icon"><img src="${ballIcon}" alt="ball"></div>` : ''}
+            <img src="${imgUrl}" alt="${pokemon.name}" loading="lazy">
+            <span class="pokedex-number">#${i}</span>
+            <span class="pokedex-name">${pokemon.name}</span>
+          `;
+          
+          item.onclick = () => showPokemonCards(pokemon.name);
+          grid.appendChild(item);
+
+          // Si es poseído pero no sabemos el total, lo pedimos para la próxima vez
+          if (isOwned && !pokemonTotalCards[pokemon.name]) {
+            getPokemonTotalCards(pokemon.name).then(() => {
+              // No refrescamos todo para no molestar, se verá al siguiente render
+            });
+          }
+        }
+
+        progress.textContent = `${ownedInRegion} / ${totalInRegion}`;
+        if (ownedInRegion === totalInRegion) progress.classList.add("complete");
+
+        header.onclick = () => {
+          section.classList.toggle("open");
+        };
+
+        if (hasVisiblePokemon || !onlyOwned) {
+          info.append(progress, arrow);
+          header.append(title, info);
+          section.append(header, grid);
+          container.appendChild(section);
+        }
+      }
+    }
+
+    async function showPokemonCards(name) {
+      quickModal.style.display = "flex";
+      document.getElementById("quickSearchTitle").textContent = `Cartas de ${name.toUpperCase()}`;
+      document.getElementById("quickSearchDesc").style.display = "none";
+      document.getElementById("quickSearchInputs").style.display = "none";
+      
+      quickStatus.innerHTML = '<div class="spinner">Buscando cartas...</div>';
+      quickResults.innerHTML = "";
+
+      try {
+        const data = await fetchJSON(`${API_BASE}/cards?q=name:"${name}"&pageSize=250`);
+        const cards = data.data || [];
+        pokemonTotalCards[name.toLowerCase()] = data.totalCount; // Actualizamos el total real
+        
+        quickStatus.innerHTML = `Se encontraron ${cards.length} cartas de ${name}.`;
+        const lang = document.getElementById("languageSelect").value;
+        const list = document.createElement("div");
+        list.className = "quick-grid-responsive";
+        cards.forEach(card => list.appendChild(createCardElement(card, lang, true)));
+        quickResults.appendChild(list);
+      } catch (e) {
+        quickStatus.textContent = "Error al buscar cartas.";
+      }
+    }
+
+    /* ── EVENTOS ── */
+    document.getElementById("modeSets").onclick = () => {
+      document.getElementById("modeSets").classList.add("active");
+      document.getElementById("modeBinder").classList.remove("active");
+      document.getElementById("setsView").style.display = "block";
+      document.getElementById("binderView").style.display = "none";
+      document.getElementById("searchSetsGroup").style.display = "flex";
+    };
+
+    document.getElementById("modeBinder").onclick = async () => {
+      document.getElementById("modeBinder").classList.add("active");
+      document.getElementById("modeSets").classList.remove("active");
+      document.getElementById("setsView").style.display = "none";
+      document.getElementById("binderView").style.display = "block";
+      document.getElementById("searchSetsGroup").style.display = "none";
+      
+      const container = document.getElementById("binderContainer");
+      if (container.innerHTML === "") {
+        container.innerHTML = '<div class="spinner">Organizando Vision Binder...</div>';
+        await loadPokedex();
+        renderBinder();
+      }
+    };
+
     function openModal(src) {
       const modal = document.getElementById("modal");
       const modalImg = document.getElementById("modalImg");
@@ -849,19 +1172,13 @@
       modal.style.display = "flex";
     }
 
-    document.getElementById("modalCloseBtn").onclick = () => {
-      document.getElementById("modal").style.display = "none";
-    };
-
+    document.getElementById("modalCloseBtn").onclick = () => document.getElementById("modal").style.display = "none";
     document.getElementById("modal").onclick = (e) => {
       if (e.target.classList.contains("modal") || e.target.classList.contains("modal-inner")) {
         document.getElementById("modal").style.display = "none";
       }
     };
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       BUSCADOR RÁPIDO (GRATUITO)
-       ────────────────────────────────────────────────────────────────────────────── */
     const quickModal = document.getElementById("quickSearchModal");
     const quickInput = document.getElementById("quickSearchInput");
     const quickNumberInput = document.getElementById("quickSearchNumberInput");
@@ -869,74 +1186,49 @@
     const quickStatus = document.getElementById("quickSearchStatus");
 
     document.getElementById("searchQuickBtn").onclick = () => {
+      document.getElementById("quickSearchTitle").textContent = "🔍 Buscador Rápido de Cartas";
+      document.getElementById("quickSearchDesc").style.display = "block";
+      document.getElementById("quickSearchInputs").style.display = "flex";
       quickModal.style.display = "flex";
       quickInput.focus();
     };
 
-    document.getElementById("closeQuickSearchBtn").onclick = () => {
-      quickModal.style.display = "none";
-    };
-
-    document.getElementById("closeQuickSearchXBtn").onclick = () => {
-      quickModal.style.display = "none";
-    };
+    document.getElementById("closeQuickSearchBtn").onclick = () => quickModal.style.display = "none";
+    document.getElementById("closeQuickSearchXBtn").onclick = () => quickModal.style.display = "none";
 
     async function doQuickSearch() {
       const nameQuery = quickInput.value.trim();
       const numberQuery = quickNumberInput.value.trim();
-      
       if (!nameQuery && !numberQuery) return;
-
       quickStatus.innerHTML = '<div class="spinner">Buscando...</div>';
       quickResults.innerHTML = "";
-
       try {
         let queryParts = [];
         if (nameQuery) queryParts.push(`name:"*${nameQuery}*"`);
         if (numberQuery) queryParts.push(`number:"${numberQuery}"`);
-        
-        const finalQuery = queryParts.join(" ");
-        
-        // Aumentamos el límite de resultados para mostrar todas las cartas encontradas (máximo 250 por página en la API)
-        const data = await fetchJSON(`${API_BASE}/cards?q=${encodeURIComponent(finalQuery)}&pageSize=250`);
+        const data = await fetchJSON(`${API_BASE}/cards?q=${encodeURIComponent(queryParts.join(" "))}&pageSize=250`);
         const cards = data.data || [];
         quickStatus.innerHTML = `Se encontraron ${cards.length} resultados.`;
-        
         const lang = document.getElementById("languageSelect").value;
-        
-        // Crear un contenedor específico para los resultados del buscador rápido
         const list = document.createElement("div");
-        list.className = "quick-grid-responsive"; // Usar la clase CSS responsive
-        
-        cards.forEach(card => {
-          const cardEl = createCardElement(card, lang, true);
-          list.appendChild(cardEl);
-        });
-        
+        list.className = "quick-grid-responsive";
+        cards.forEach(card => list.appendChild(createCardElement(card, lang, true)));
         quickResults.appendChild(list);
-      } catch (e) {
-        quickStatus.textContent = "Error en la búsqueda.";
-      }
+      } catch (e) { quickStatus.textContent = "Error en la búsqueda."; }
     }
 
     document.getElementById("doQuickSearchBtn").onclick = doQuickSearch;
     quickInput.onkeypress = (e) => { if (e.key === "Enter") doQuickSearch(); };
     quickNumberInput.onkeypress = (e) => { if (e.key === "Enter") doQuickSearch(); };
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       EVENTOS GLOBALES
-       ────────────────────────────────────────────────────────────────────────────── */
     document.getElementById("searchSets").oninput = applyGlobalFilters;
     document.getElementById("onlyOwnedToggle").onchange = applyGlobalFilters;
-    
     document.getElementById("languageSelect").onchange = () => {
       refreshSetCounters();
       applyGlobalFilters();
     };
-    
     document.getElementById("reloadBtn").onclick = loadSets;
 
-    // Iniciar
     loadSets();
   </script>
 </body>
